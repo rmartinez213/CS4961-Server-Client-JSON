@@ -2,18 +2,12 @@
 //Create a connection
 var socket = io.connect('http://localhost:4000');
 
-
 //Query DOM
 var output = document.getElementById('output');
 
+var jsonString;
 
-socket.on('simulated-data', function  (data){
-	var jsonString = JSON.stringify(JSON.parse(data),null, 4);
-	
-    output.innerHTML = '<pre>' + jsonString + '</pre>';
-});
-
-socket.on('simulated-data2', function (data){	
+socket.on('simulated-data', function (data){	
 	for(x in data)
 	{
 		//for( y in data[x]) // print all records
@@ -26,8 +20,7 @@ socket.on('simulated-data2', function (data){
 			var numOfVic = Math.floor(Math.random() * 1000);
 			var rep = data[x][y].reporter;
 
-			var alltext;
-			
+
 			count.innerHTML = data[x].length;
 			//alltext += data[x].length;
 
@@ -46,10 +39,18 @@ socket.on('simulated-data2', function (data){
 			vic.innerHTML = '<td>' + numOfVic + '</td><br>';
 			//alltext += '<td>' + numOfVic + '</td><br>';
 
-			
+			jsonString =  '{ "monster":' + 
+			 '{ "monster_number":' + monsterNum + ',\n'+
+			 '"monster_name":"' + monsterName + '",\n' + 
+			 '"attack_location":"' + location + '",\n' +
+			  '"victim_count":"' + numOfVic + '",\n' +
+			 '"reporter":"' + rep + '"\n' +
+			 '}' +
+			 '}';
+
+			 jsonString = JSON.stringify(JSON.parse(jsonString), null, 4);
+
+			 output.innerHTML = '<pre>' + jsonString + '</pre>'
 		}	
 	}
 });
-
-
-
